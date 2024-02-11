@@ -1,0 +1,46 @@
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Gerar dados sintéticos
+np.random.seed(0)
+X = np.random.rand(100, 1) * 5000  # Tamanho da casa entre 0 e 5000 sqf
+y = 100000 + 50 * X + np.random.randn(100, 1) * 10000  # Preço com algum ruído
+
+# Converte de square feet para metro quadrado
+X = X / 10.764
+
+# Split dataset de treino e teste
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Cria modelo de regressão linear
+reg = LinearRegression()
+
+# Treina o modelo
+reg.fit(X_train, y_train)
+
+# Faz a previsão no conjunto de dados de teste
+y_pred = reg.predict(X_test)
+
+# Calcula a mean squared error da predição
+print("Mean Squared Error:", mean_squared_error(y_test, y_pred))
+
+# Plota a regressão
+plt.scatter(X_train, y_train, color='blue', label='Training data')
+plt.scatter(X_test, y_test, color='red', label='Test data')
+plt.plot(X_test, y_pred, color='black', label='Regression line')
+plt.xlabel('Size (sq m)')
+plt.ylabel('Price ($)')
+plt.legend()
+plt.show()
+
+# Pede p/entrar com o tamanho da casa em m2
+user_size = float(input("Entre com o tamanho da casa (em m2): "))
+
+# Usa o modelo treinado para prever o valor da casa
+user_price_pred = reg.predict([[user_size]])
+
+# Imprime o preço previsto
+print("O preço previsto da casa é: $%.2f" % user_price_pred[0][0])
