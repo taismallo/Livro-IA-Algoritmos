@@ -1,1 +1,53 @@
+from sklearn.datasets import make_classification
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+from sklearn import tree
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Gera dados sintéticos
+np.random.seed(0)
+X, y = make_classification(n_samples=500, n_features=2, n_informative=2, 
+                           n_redundant=0, n_clusters_per_class=1, random_state=42)
+
+# Re-escala as características para representar uso e satisfação
+X[:, 0] = 200 * (X[:, 0] - X[:, 0].min()) / (X[:, 0].max() - X[:, 0].min())   
+X[:, 1] = 1 + 9 * (X[:, 1] - X[:, 1].min()) / (X[:, 1].max() - X[:, 1].min())   
+X[:, 1] = np.round(X[:, 1])  # Faz satisfação ser característica discreta
+
+# Split dos dados (treino e validação)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Cria a Árvore de Decisão
+clf = DecisionTreeClassifier(max_depth=3)
+
+# Treina o Classificador
+clf.fit(X_train, y_train)
+
+# Avalia o Classificador
+y_pred = clf.predict(X_test)
+print(classification_report(y_test, y_pred, target_names=['No Churn', 'Churn']))
+
+# Plota a árvore de decisÃo sem o valor Gini
+fig, ax = plt.subplots(figsize=(20, 15))
+tree.plot_tree(clf, filled=True, feature_names=['Uso', 'Satisfação'], 
+               class_names=['No Churn', 'Churn'], 
+               ax=ax, impurity=False, node_ids=False)
+plt.show()
+
+# Ask the user to input the usage and satisfaction
+user_usage = float(input("Insira o uso mensal do serviço (em horas): "))
+user_satisfaction = float(input("Insira a satisfação do cliente \
+com o serviço (numa escala de 1 a 10): "))
+
+# Usando o modelo treinado para prever Churn
+user_churn_pred = clf.predict([[user_usage, user_satisfaction]])
+
+# Imprime a previsão de churn
+if user_churn_pred[0] == 0:
+    print("O cliente NÃO vai desistir do serviço")
+else:
+    print("O cliente VAI desistir do serviço")
 
