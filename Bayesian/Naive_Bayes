@@ -1,1 +1,45 @@
+# Categorias de entrada de dados:
 
+# Renda em 3 grupos: baixa (1), media (2) e alta (3).
+
+# História de Crédito em 2 grupos: fraco (0) e bom (1).
+
+# Idade em 2 grupos: novo (0) e velho (1)
+
+# Empréstimo: não aprovado (0) e aprovado (1).
+
+# ===================================================
+
+import pandas as pd
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import LabelEncoder
+
+# Criando o dataset
+data = {
+    'Nome': ['André', 'Lucia', 'Carol', 'Carlos', 'Tais', 'Elisa', 'Julia', 'Clara', 'Leonardo', 'Vitor',
+             'Mercedes', 'Mané', 'Daniel', 'Isabella', 'Matheus', 'Maria', 'João', 'Cherubina', 'Davi', 'Amélia'],
+    'Renda': [3, 2, 1, 1, 3, 2, 1, 1, 3, 2, 2, 1, 3, 1, 2, 3, 2, 1, 3, 2],
+    'História de Crédito': [1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1],
+    'Idade': [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0],
+    'Aprovação': [1, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1]
+}
+df = pd.DataFrame(data)
+df
+
+# Criando o classificador Naive Bayes
+model = GaussianNB()
+
+# Colocando dados no modelo
+features = df[['Renda', 'História de Crédito', 'Idade']]
+target = df['Aprovação']
+model.fit(features, target)
+
+# Agora o modelo pode prever a classificação
+# Por exemplo, uma pessoa com renda média, boa história de crédito e mais velho
+new_person = pd.DataFrame({'Renda': [2], 'História de Crédito': [1], 'Idade': [0]})
+prediction = model.predict(new_person)
+
+if prediction[0] == 1:
+    print("o seu empréstimo foi APROVADO")
+else:
+    print("o seu empréstimo NÃO foi aprovado")
