@@ -48,3 +48,7 @@ user_price_pred = reg.predict([[user_size]])
 
 # Imprime o preço previsto
 print("O preço previsto da casa é: $%.2f" % user_price_pred[0][0])
+
+# Obviamente que este é um exemplo extremamente simples e 
+# no contexto da vida real poderíamos aumentar a quantidade 
+# de características da casa como: localidade, quantidade de quartos, garagem etc.
