@@ -1,0 +1,38 @@
+# A seguir vemos um exemplo de algoritmo de K-Means a título de elucidação.
+# Que produz o seguinte resultado com dados aleatórios antes do agrupamento
+# ====================================
+
+from sklearn.datasets import make_blobs
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Gerando dados sintéticos
+np.random.seed(0)
+X, _ = make_blobs(n_samples=500, n_features=2, centers=4, cluster_std=1.5, random_state=0)
+
+# Plot the data antes do agrupamento
+plt.figure(figsize=(10, 6))
+plt.scatter(X[:, 0], X[:, 1])
+plt.title('Dados ANTES do Agrupamento')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.show()
+
+# ====================================
+# daqui em diante plotando DEPOIS do K-means rodadado e os centroides atualizados
+
+# Fazendo o agrupamento com K-means
+kmeans = KMeans(n_clusters=4, random_state=0).fit(X)
+
+# Plotando os dados depois do agrupamento
+plt.figure(figsize=(10, 6))
+plt.scatter(X[:, 0], X[:, 1], c=kmeans.labels_)
+# plotando o centro dos clusters
+plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], color='red', marker='X', s=200)  
+
+plt.title('Dados DEPOIS do Agrupamento')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.show()
