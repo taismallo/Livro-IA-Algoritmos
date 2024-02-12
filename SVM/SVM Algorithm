@@ -61,3 +61,13 @@ plt.ylabel('Budget (US$ M)')
 plt.title('Classificação de Gênero de Filmes usando SVM')
 plt.legend(loc='upper right')  # Display the legend
 plt.show()
+
+# Embora a Netflix empregue algoritmos substancialmente 
+# mais complexos, sofisticados e multidimensionais, 
+# a essência da técnica permanece: a classificação baseada em 
+# características para oferecer recomendações personalizadas. 
+# Assim como a SVM do exemplo procura separar filmes em “Drama” 
+# ou “Ação”, a Netflix analisa padrões de visualização e 
+# atributos de conteúdo para sugerir títulos que melhor 
+# se alinhem com as preferências individuais dos usuários, 
+# um princípio central dos sistemas de recomendação modernos.
