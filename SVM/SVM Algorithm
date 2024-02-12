@@ -1,1 +1,63 @@
+# O código ilustra a implementação de SVM para classificar 
+# filmes em gêneros, utilizando características como duração e orçamento. 
+# Este método reflete, guardadas as devidas proporções, 
+# o processo analítico subjacente aos sistemas de recomendação avançados como o da Netflix. 
+# ===============================
 
+from sklearn.model_selection import train_test_split
+from sklearn import svm
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.datasets import make_blobs
+from sklearn.metrics import classification_report
+
+np.random.seed(42)
+# Gerando um conjunto de dados
+X, y = make_blobs(n_samples=200, centers=2, random_state=42)
+
+# Escalando características para representar duração e orçamento
+X[:, 0] = 80 + 100 * (X[:, 0] - X[:, 0].min()) / (X[:, 0].max() - X[:, 0].min())  
+# Duration
+X[:, 1] = 1 + 199 * (X[:, 1] - X[:, 1].min()) / (X[:, 1].max() - X[:, 1].min())  
+# Budget
+
+# Dividir os dados em um conjunto de treinamento e um conjunto de teste
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
+                                                    random_state=0)
+
+# Criar um classificador SVM com um kernel linear
+clf = svm.SVC(kernel='linear')
+
+# Treinar o classificador
+clf.fit(X_train, y_train)
+
+# Avaliar o classificador
+y_pred = clf.predict(X_test)
+print(classification_report(y_test, y_pred, target_names=['Drama', 'Action']))
+
+# Plotar o limite de decisão (hiperplano) e os vetores de suporte
+plt.figure(figsize=(8, 6))
+
+# Gráficos de dispersão separados em Ação/Drama para fornecer legendas
+plt.scatter(X_train[y_train == 0][:, 0], X_train[y_train == 0][:, 1], c='blue', 
+            cmap='coolwarm', label='Drama')
+plt.scatter(X_train[y_train == 1][:, 0], X_train[y_train == 1][:, 1], c='red', 
+            cmap='coolwarm', label='Ação')
+plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap='coolwarm')
+ax = plt.gca()
+xlim = ax.get_xlim()
+ylim = ax.get_ylim()
+xx = np.linspace(xlim[0], xlim[1], 30)
+yy = np.linspace(ylim[0], ylim[1], 30)
+YY, XX = np.meshgrid(yy, xx)
+xy = np.vstack([XX.ravel(), YY.ravel()]).T
+Z = clf.decision_function(xy).reshape(XX.shape)
+ax.contour(XX, YY, Z, colors='k', levels=[-1, 0, 1], alpha=0.5, 
+           linestyles=['--', '-', '--'])
+ax.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1], s=100, 
+           facecolors='none', edgecolors='k')
+plt.xlabel('Duração (minutos)')
+plt.ylabel('Budget (US$ M)')
+plt.title('Classificação de Gênero de Filmes usando SVM')
+plt.legend(loc='upper right')  # Display the legend
+plt.show()
