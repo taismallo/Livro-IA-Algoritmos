@@ -9,6 +9,12 @@
 # Empréstimo: não aprovado (0) e aprovado (1).
 
 # ===================================================
+# Neste exemplo, estamos criando um dataset de nomes, 
+# renda, idade e aprovação de forma aleatória, apenas para efeito didático
+# Observe que, salvo os nomes, as demais características foram trocadas 
+# por números. Normalmente isso é feito para facilitar o processamento. 
+# A máquina entende mais fácil!
+# ==================================================
 
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
@@ -25,6 +31,12 @@ data = {
 }
 df = pd.DataFrame(data)
 df
+
+# ==================================================
+# Supondo neste caso uma pessoa com renda média, 
+# boa história de crédito e mais velho, 
+# tem seu crédito aprovado pelo algoritmo.
+# ==================================================
 
 # Criando o classificador Naive Bayes
 model = GaussianNB()
