@@ -1,1 +1,62 @@
+# O algoritmo representa a utilização do KNN para determinar se um vinho é do agrado 
+# ou não de uma pessoa com base no nível de acidez e açucar do vinho
+# ===================================================
+
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+import numpy as np
+from sklearn.datasets import make_classification
+
+np.random.seed(0)
+
+# Gerando o dataset
+X, y = make_classification(n_samples=200, n_features=2, n_informative=2, 
+                           n_redundant=0, n_clusters_per_class=1)
+
+# Dimensionando recursos para corresponder a descrição
+X[:, 0] = 2.0 + 2.0 * (X[:, 0] - X[:, 0].min()) / (X[:, 0].max() - X[:, 0].min())
+X[:, 1] = 1.0 + 2.0 * (X[:, 1] - X[:, 1].min()) / (X[:, 1].max() - X[:, 1].min())
+
+# Split dos dados em dataset de treino e teste 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, 
+                                                    random_state=0)
+
+# Inicializando o classificado k-NN classifier com 5 vizinhos
+knn = KNeighborsClassifier(n_neighbors=5)
+
+# Ajustar o classificador aos dados de treinamento
+knn.fit(X_train, y_train)
+
+# Pedir ao usuário que entre com a acidez e nível de açúcar do vinho 
+user_acidity = float(input("Entre o nível de acidez do vinho (entre 2.0 and 4.0): "))
+user_sugar = float(input("Entre o nível de acúcar do vinho (between 1.0 and 3.0): "))
+
+# Preparar o vetor de característica do vinho
+user_wine = np.array([[user_acidity, user_sugar]])
+
+# Usar o modelo treinado em K-NN para prever o gosto do usuário
+user_taste_pred = knn.predict(user_wine)
+
+# Imprimir se é bom ou ruim
+print("The predicted taste of the wine is:", 
+      'bom' if user_taste_pred[0] == 1 else 'ruim')
+
+# Plotar os dados
+plt.figure(figsize=(8, 6))
+plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap='coolwarm', 
+            label='Training data')
+plt.scatter(user_wine[:, 0], user_wine[:, 1], color='black', marker='x', 
+            label='User point')
+plt.xlabel('Acidez')
+plt.ylabel('Açucar')
+plt.title('Classificação do Vinho')
+
+# Achar os k-nearest neighbors and e mostrar no plot
+distances, indices = knn.kneighbors(user_wine)
+plt.scatter(X_train[indices, 0], X_train[indices, 1], color='lime', 
+            edgecolor='black', label='Nearest neighbors')
+
+plt.legend()
+plt.show()
 
