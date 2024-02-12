@@ -1,3 +1,10 @@
+# No exemplo a seguir, bem simples, peço ajuda a máquina para decidir 
+# se um cliente vai ou não desistir do produto/serviço que é usuário.
+# Veja que a primeira coisa (após importação de bibliotecas) 
+# é preparar um conjunto de dados de utilização e satisfação, 
+# para que a árvore de decisão possa ser construída.
+# =========================================================
+
 from sklearn.datasets import make_classification
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
